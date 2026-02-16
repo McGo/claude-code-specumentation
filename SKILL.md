@@ -9,8 +9,9 @@ You are executing the **specumentation** skill — a combined specification and 
 ## Parameter Parsing
 
 Parse `$ARGUMENTS` for:
-- **Mode**: `init`, `concept`, `epics`, `inbox`, `update`, `publish` (default if none given: `full` = all phases sequentially)
+- **Mode**: `init`, `concept`, `epics`, `inbox`, `update`, `publish`, `work` (default if none given: `full` = all phases sequentially, excluding `work`)
 - **Topic name**: After `concept`, e.g. `concept auth-module`
+- **Ticket ID**: After `work`, e.g. `work E-02.03` (default if none given: next open ticket by priority)
 - **Document type**: After `publish`, e.g. `publish user-manual` (default if none given: all available document types)
 - **Language**: `lang=XX` (e.g. `lang=de`, `lang=fr`; default: `en`)
 
@@ -278,7 +279,63 @@ When code and concept diverge, add a notice block at the top of the affected sec
 
 ---
 
-## Phase 6 — Publish (mode: `publish [document-type]` or `full`)
+## Phase 6 — Work (mode: `work [ticket-id]`)
+
+**Goal:** Pick the next open ticket from the epics and implement it.
+
+**Important:** This phase is NOT part of `full` mode — it must be invoked explicitly.
+
+### Ticket Selection:
+
+1. If a ticket ID is given (e.g. `work E-02.03`), use that ticket.
+2. If no ticket ID is given, select the next open ticket by priority:
+   a. Read all epics in `docs/epics/` sorted by filename.
+   b. Within each epic, find tickets by status priority: `in progress` first (resume), then `open`.
+   c. Pick the first match.
+3. If no open tickets exist, inform the user and suggest running `epics` to generate new tickets.
+
+### Steps:
+
+1. Read the selected ticket's full details (description, acceptance criteria, files, concept ref).
+2. Read the referenced concept section(s) for context.
+3. Display the ticket to the user:
+
+```
+── specumentation work ─────────────────────────────
+Ticket:  [E-NN.XX] [Title]
+Epic:    [Epic title]
+Concept: [Concept reference]
+─────────────────────────────────────────────────────
+[Description]
+
+Acceptance Criteria:
+  - [ ] [Criterion 1]
+  - [ ] [Criterion 2]
+─────────────────────────────────────────────────────
+```
+
+4. Mark the ticket as `in progress` in the epic file.
+5. Implement the ticket:
+   - Follow the description and acceptance criteria.
+   - Touch only the files listed in the ticket, unless additional files are clearly necessary.
+   - Write code that satisfies all acceptance criteria.
+6. After implementation, verify each acceptance criterion.
+7. Mark the ticket as `✓ RESOLVED` in the epic file with a brief resolution description.
+8. Update the related concept if the implementation revealed new information or divergence.
+9. Git commit the code changes and the updated epic file separately:
+   - Code: `feat|fix|refactor(...): [description]` (conventional commit based on change type)
+   - Docs: `docs(specumentation): resolve [E-NN.XX] [title]`
+
+### Rules:
+
+- Only work on ONE ticket at a time.
+- If the ticket is blocked or cannot be completed, keep it as `in progress` and add a note to the ticket explaining the blocker.
+- Do NOT mark a ticket as resolved if acceptance criteria are not met.
+- If implementation requires changes not covered by the ticket, create a new ticket in the appropriate epic for the additional work.
+
+---
+
+## Phase 7 — Publish (mode: `publish [document-type]` or `full`)
 
 **Goal:** Generate a document as PDF from the project's concepts and epics.
 

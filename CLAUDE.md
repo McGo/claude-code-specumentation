@@ -52,6 +52,8 @@ bash install.sh
 /specumentation epics                    # Derive epics with tickets from concepts
 /specumentation inbox                    # Process external docs from docs/in/
 /specumentation update                   # Sync documentation with code changes
+/specumentation work                     # Pick next open ticket and implement it
+/specumentation work E-02.03             # Implement a specific ticket
 /specumentation publish                  # Generate all document types as PDF
 /specumentation publish user-manual      # Generate a specific document type
 /specumentation publish elevator-pitch lang=de  # Combined parameters
