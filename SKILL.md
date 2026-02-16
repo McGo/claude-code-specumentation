@@ -102,7 +102,7 @@ When publishing, read the document type definition and follow its instructions t
 
 ### When mode is `concept [topic]`:
 
-Analyze the codebase for the named topic and create/update its concept document.
+Analyze the **current codebase** for the named topic and create/update its concept document. The code is the primary source — the concept is derived from what actually exists in the repository.
 
 ### When mode is `full`:
 

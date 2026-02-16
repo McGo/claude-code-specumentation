@@ -7,7 +7,7 @@ A Claude Code skill that enforces a **spec-first development** workflow: write c
 ## What It Does
 
 - **Init** — Sets up an opinionated `docs/` structure with concept, epics, documents, and inbox directories
-- **Concept** — Creates or updates concept documents that describe the application functionally and technically
+- **Concept** — Analyzes the current codebase and creates or updates concept documents that describe the application functionally and technically
 - **Epics** — Derives actionable epics with tickets from concept documents
 - **Inbox** — Processes external documents (e.g. from ChatGPT) and incorporates them into concepts and epics
 - **Update** — Detects divergence between code and concepts, flags it, and synchronizes documentation
