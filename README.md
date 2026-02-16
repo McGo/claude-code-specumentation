@@ -74,10 +74,8 @@ docs/
 ├── assets/                                 # Logos, colors, images for documents
 │   ├── logo.svg
 │   └── brand-colors.json
-└── in/                                     # Inbox for external documents
-    ├── new-feature-idea.md                 # Waiting to be processed
-    └── processed/                          # Already incorporated
-        └── 2026-02-15-api-changes.md
+└── in/                                     # Inbox for external documents (deleted after processing)
+    └── new-feature-idea.md                 # Waiting to be processed
 ```
 
 ## Workflow

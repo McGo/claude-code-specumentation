@@ -232,7 +232,7 @@ Each epic is saved as `docs/epics/epic-[NN]-[slug].md`.
 
 ### Steps:
 
-1. Read all files in `docs/in/` (Markdown, text, or any readable format). Ignore the `processed/` subdirectory.
+1. Read all files in `docs/in/` (Markdown, text, or any readable format).
 2. For each document:
    a. Analyze its content — is it a new concept, a change to an existing concept, a feature request, a bug description, or a specification from an external source (e.g. ChatGPT)?
    b. Determine which existing concept(s) it relates to, or if a new concept is needed.
@@ -240,14 +240,14 @@ Each epic is saved as `docs/epics/epic-[NN]-[slug].md`.
    - **New concept**: Create a new concept document in `docs/concept/` with status `draft`, referencing the inbox document as source.
    - **Change to existing concept**: Update the affected concept(s), add Change Log entries noting the inbox document as source.
    - **New requirements**: Add to the relevant concept's Functional/Technical Description and create corresponding epic tickets.
-4. After processing, move the inbox document to `docs/in/processed/` with a date prefix: `[YYYY-MM-DD]-[original-filename]`.
+4. After processing, **delete** the inbox document.
 5. Update the Concept Index and affected epics.
 
 ### Rules:
 
-- NEVER delete inbox documents — move them to `docs/in/processed/` after incorporation.
 - Always note the source in Change Log entries: `Source: docs/in/[filename]`.
 - If an inbox document is ambiguous or contradicts existing concepts, flag it in the Open Questions section of the affected concept.
+- Processed inbox documents are deleted — their content lives on in the concepts and epics they were incorporated into.
 
 ---
 

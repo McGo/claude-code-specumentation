@@ -71,6 +71,5 @@ docs/
 ├── documents/        # Generated documents (PDF, HTML) + layout template
 │   └── document-layout.html
 ├── assets/           # Logos, color definitions, images for documentation
-└── in/               # Inbox for external docs (e.g. from ChatGPT)
-    └── processed/    # Inbox items after incorporation
+└── in/               # Inbox for external docs (e.g. from ChatGPT), deleted after processing
 ```
