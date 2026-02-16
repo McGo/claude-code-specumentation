@@ -9,7 +9,7 @@ You are executing the **specumentation** skill — a combined specification and 
 ## Parameter Parsing
 
 Parse `$ARGUMENTS` for:
-- **Mode**: `init`, `concept`, `epics`, `inbox`, `update`, `publish`, `work` (default if none given: `full` = all phases sequentially, excluding `work`)
+- **Mode**: `init`, `concept`, `epics`, `inbox`, `update`, `publish`, `work`, `whats-next` (default if none given: `full` = all phases sequentially, excluding `work` and `whats-next`)
 - **Topic name**: After `concept`, e.g. `concept auth-module`
 - **Ticket ID**: After `work`, e.g. `work E-02.03` (default if none given: next open ticket by priority)
 - **Document type**: After `publish`, e.g. `publish user-manual` (default if none given: all available document types)
@@ -356,6 +356,44 @@ Acceptance Criteria:
 - If the ticket is blocked or cannot be completed, keep it as `in progress` and add a note to the ticket explaining the blocker.
 - Do NOT mark a ticket as resolved if acceptance criteria are not met.
 - If implementation requires changes not covered by the ticket, create a new ticket in the appropriate epic for the additional work.
+
+---
+
+## Whats-Next (mode: `whats-next`)
+
+**Goal:** Analyze the current project state and suggest exactly **one** next step.
+
+**Important:** This mode is NOT part of `full` — it must be invoked explicitly. It never executes actions, only recommends.
+
+### Steps:
+
+1. Quickly assess the project state:
+   a. Does `docs/` exist with the expected structure? If not → suggest `init`.
+   b. Are there files in `docs/in/`? If yes → suggest `inbox`.
+   c. Has the codebase changed since the last concept update (check git history and Change Logs)? If yes → suggest `update`.
+   d. Are there concepts without corresponding epics, or concepts that changed since epics were last generated? If yes → suggest `epics`.
+   e. Are there open tickets in the epics? If yes → suggest `work` and name the next ticket.
+   f. Are generated documents outdated (older than latest concept changes)? If yes → suggest `publish`.
+   g. If none of the above → report that everything is up to date.
+
+2. Display the recommendation:
+
+```
+── specumentation whats-next ───────────────────────
+Recommended:  [mode]
+Reason:       [one-line explanation]
+[If work: Next ticket: [E-NN.XX] [Title]]
+─────────────────────────────────────────────────────
+Run /specumentation [mode] to proceed.
+```
+
+3. Ask the user if they want to execute the suggested step.
+
+### Rules:
+
+- Always suggest exactly ONE step — the most impactful one based on the priority order above.
+- Never suggest `full` — always a specific mode.
+- Keep the output short and actionable.
 
 ---
 

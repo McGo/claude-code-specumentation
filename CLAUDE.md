@@ -54,6 +54,7 @@ bash install.sh
 /specumentation update                   # Sync documentation with code changes
 /specumentation work                     # Pick next open ticket and implement it
 /specumentation work E-02.03             # Implement a specific ticket
+/specumentation whats-next               # Suggest the next step to take
 /specumentation publish                  # Generate all document types as PDF
 /specumentation publish user-manual      # Generate a specific document type
 /specumentation publish elevator-pitch lang=de  # Combined parameters

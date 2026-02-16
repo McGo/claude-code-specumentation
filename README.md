@@ -12,6 +12,7 @@ A Claude Code skill that enforces a **spec-first development** workflow: write c
 - **Inbox** — Processes external documents (e.g. from ChatGPT) and incorporates them into concepts and epics
 - **Update** — Detects divergence between code and concepts, flags it, and synchronizes documentation
 - **Work** — Picks the next open ticket from the epics and implements it
+- **Whats-Next** — Analyzes the project state and suggests exactly one next step
 - **Publish** — Generates documents as PDF using predefined document types
 
 ## Installation
@@ -34,6 +35,7 @@ The installer creates a symlink from `~/.claude/skills/specumentation` to the cl
 /specumentation inbox                        # Process docs from docs/in/
 /specumentation update                       # Sync docs with code changes
 /specumentation work                         # Pick next open ticket and implement it
+/specumentation whats-next                   # What should I do next?
 /specumentation work E-02.03                 # Implement a specific ticket
 /specumentation publish                      # Generate all document types as PDF
 /specumentation publish user-manual          # Generate a specific document type
