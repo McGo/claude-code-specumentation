@@ -91,6 +91,30 @@ When publishing, read the document type definition and follow its instructions t
 3. Check if `docs/documents/document-layout.html` exists. If not, create it with a professional HTML/CSS layout for A4 PDF printing (title page, table of contents, chapter styling, code blocks, tables, print-optimized CSS with proper page breaks and margins).
 4. If `README.md` exists, extract project name and description to populate the overview.
 5. If a package manager config exists (`package.json`, `composer.json`, `pyproject.toml`, `Cargo.toml`, `go.mod`), extract project metadata.
+6. Document specumentation assumptions in the project's `CLAUDE.md`. If the file exists, append a `## Specumentation` section (if not already present). If the file does not exist, create it. The section contains:
+
+```markdown
+## Specumentation
+
+This project uses [specumentation](https://github.com/McGo/claude-code-specumentation) for spec-first development.
+
+### Assumptions
+
+- **Document language**: [language, e.g. "German (de)" — derived from `lang=` parameter, existing docs, or README language]
+- **Concept language**: [same as document language unless explicitly different]
+- **Project name**: [detected project name]
+- **Project version source**: [e.g. "package.json", "Cargo.toml", "manual" — where the version is read from]
+
+### Directory Structure
+
+- `docs/concept/` — Concept documents (specifications)
+- `docs/epics/` — Epics with tickets
+- `docs/documents/` — Generated documents (PDF, HTML)
+- `docs/assets/` — Branding resources (logos, colors)
+- `docs/in/` — Inbox for external documents
+```
+
+If the `lang=` parameter was provided, use it. Otherwise, detect the language from existing documentation, README, or code comments. If unclear, default to English and note it as an assumption.
 
 **Output:** Confirm what was created and what already existed.
 
