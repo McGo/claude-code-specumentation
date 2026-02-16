@@ -65,7 +65,7 @@ When publishing, read the document type definition and follow its instructions t
 # [Project Name] — Project Overview
 
 > This document is the entry point for all project documentation.
-> Managed by [specumentation](https://github.com/McGo/specumentation).
+> Managed by [specumentation](https://github.com/McGo/claude-code-specumentation).
 
 ## Project Description
 

@@ -17,7 +17,7 @@ A Claude Code skill that enforces a **spec-first development** workflow: write c
 ## Installation
 
 ```bash
-git clone https://github.com/McGo/specumentation.git
+git clone https://github.com/McGo/claude-code-specumentation.git
 cd specumentation
 bash install.sh
 ```
