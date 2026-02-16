@@ -28,6 +28,7 @@ docs/
 ├── epics/            # Epics with tickets, derived from concepts
 ├── documents/        # Generated documents (PDFs, HTML) + layout template
 │   └── document-layout.html
+├── assets/           # Logos, color definitions, images for documentation
 └── in/               # Inbox: external concepts & change requests to be processed
 ```
 
@@ -56,7 +57,7 @@ When publishing, read the document type definition and follow its instructions t
 
 ### Steps:
 
-1. Create directories if they don't exist: `docs/concept/`, `docs/epics/`, `docs/documents/`, `docs/in/`.
+1. Create directories if they don't exist: `docs/concept/`, `docs/epics/`, `docs/documents/`, `docs/assets/`, `docs/in/`.
 2. Check if `docs/concept/00-overview.md` exists. If not, create it:
 
 ```markdown
@@ -294,8 +295,9 @@ When code and concept diverge, add a notice block at the top of the affected sec
 3. Read all epics from `docs/epics/` if the document type requires them.
 4. Read `docs/documents/document-layout.html` as the layout template.
    - If the file does not exist, create it first (same as init phase).
-5. Follow the document type's generation instructions to compose the content.
-6. Insert the composed content into the layout template.
+5. Check `docs/assets/` for branding resources (logos, color definitions, images). If present, incorporate them into the generated document (e.g. logo on title page, brand colors in styling).
+6. Follow the document type's generation instructions to compose the content.
+7. Insert the composed content into the layout template.
 7. Write the filled HTML to `docs/documents/`.
 8. Auto-detect Chrome binary:
    - macOS: `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome`

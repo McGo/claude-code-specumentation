@@ -68,6 +68,9 @@ docs/
 │   ├── myproject-user-manual-2026-02-16.pdf
 │   ├── myproject-elevator-pitch-2026-02-16.pdf
 │   └── ...
+├── assets/                                 # Logos, colors, images for documents
+│   ├── logo.svg
+│   └── brand-colors.json
 └── in/                                     # Inbox for external documents
     ├── new-feature-idea.md                 # Waiting to be processed
     └── processed/                          # Already incorporated
