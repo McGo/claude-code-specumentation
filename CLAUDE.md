@@ -1,4 +1,4 @@
-# CLAUDE.md
+bit# CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -28,7 +28,7 @@ description: "..."         # What this type produces
 [Generation prompt with structure and style instructions]
 ```
 
-Built-in types: `user-manual`, `elevator-pitch`, `executive-summary`, `architecture`.
+Built-in types: `user-manual`, `elevator-pitch`, `executive-summary`, `architecture`, `ticket-overview`.
 New types can be added by creating a new `.md` file in `documents/`.
 
 ## Key Conventions (from sibling skill `security-audit`)
@@ -55,6 +55,7 @@ bash install.sh
 /specumentation work                     # Pick next open ticket and implement it
 /specumentation work E-02.03             # Implement a specific ticket
 /specumentation whats-next               # Suggest the next step to take
+/specumentation ticket-overview          # Show epic/ticket status overview + PDF
 /specumentation publish                  # Generate all document types as PDF
 /specumentation publish user-manual      # Generate a specific document type
 /specumentation publish elevator-pitch lang=de  # Combined parameters

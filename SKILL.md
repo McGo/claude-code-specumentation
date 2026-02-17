@@ -1,5 +1,6 @@
 ---
 name: specumentation
+aliases: ["speck"]
 description: "Spec-first development workflow: create concept documents, derive epics with tickets, maintain living documentation, generate documents (manuals, pitches, architecture docs) as PDF"
 disable-model-invocation: true
 ---
@@ -9,7 +10,7 @@ You are executing the **specumentation** skill — a combined specification and 
 ## Parameter Parsing
 
 Parse `$ARGUMENTS` for:
-- **Mode**: `init`, `concept`, `epics`, `inbox`, `update`, `publish`, `work`, `whats-next` (default if none given: `full` = all phases sequentially, excluding `work` and `whats-next`)
+- **Mode**: `init`, `concept`, `epics`, `inbox`, `update`, `publish`, `work`, `whats-next`, `ticket-overview` (default if none given: `full` = all phases sequentially, excluding `work`, `whats-next`, and `ticket-overview`)
 - **Topic name**: After `concept`, e.g. `concept auth-module`
 - **Ticket ID**: After `work`, e.g. `work E-02.03` (default if none given: next open ticket by priority)
 - **Document type**: After `publish`, e.g. `publish user-manual` (default if none given: all available document types)
@@ -397,7 +398,49 @@ Run /specumentation [mode] to proceed.
 
 ---
 
-## Phase 7 — Publish (mode: `publish [document-type]` or `full`)
+## Phase 7 — Ticket Overview (mode: `ticket-overview`)
+
+**Goal:** Display a status overview of all epics and tickets, both in the terminal and as PDF.
+
+**Important:** This mode is NOT part of `full` — it must be invoked explicitly.
+
+### Steps:
+
+1. Read all epic files from `docs/epics/` sorted by filename.
+2. For each epic, extract: title, status, and all tickets.
+3. For each ticket, extract: ID, title, status (`✓` resolved / `→` in progress / `○` open), and a 1-2 sentence summary from the description.
+4. **CLI Output** — Print a Markdown table to the terminal:
+
+```
+── specumentation ticket-overview ─────────────────
+
+Epic [NN]: [Title] — [status]
+
+| ID       | Status | Title          | Summary              |
+|----------|--------|----------------|----------------------|
+| E-NN.01  | ✓      | [Ticket title] | [Short summary]      |
+| E-NN.02  | →      | [Ticket title] | [Short summary]      |
+| E-NN.03  | ○      | [Ticket title] | [Short summary]      |
+
+[Repeat for each epic]
+
+Summary: [N] epics, [N] tickets ([N] resolved, [N] in progress, [N] open)
+────────────────────────────────────────────────────
+```
+
+5. **PDF Generation** — Use the `ticket-overview` document type from `documents/ticket-overview.md`:
+   a. Read the document type definition.
+   b. Read all concepts and epics.
+   c. Read `docs/documents/document-layout.html` as the layout template (create if missing).
+   d. Check `docs/assets/` for branding resources and incorporate them.
+   e. Follow the document type's generation instructions to compose the content.
+   f. Insert the composed content into the layout template.
+   g. Write the filled HTML to `docs/documents/`.
+   h. Generate PDF via Chrome (same mechanism as Publish phase).
+
+---
+
+## Phase 8 — Publish (mode: `publish [document-type]` or `full`)
 
 **Goal:** Generate a document as PDF from the project's concepts and epics.
 
@@ -441,6 +484,7 @@ List them by reading the skill's `documents/` directory. Built-in types include:
 - `elevator-pitch` — One-page product summary
 - `executive-summary` — Management overview with status and roadmap
 - `architecture` — Technical architecture document for developers
+- `ticket-overview` — Tabular status overview of all epics and tickets
 
 ---
 
