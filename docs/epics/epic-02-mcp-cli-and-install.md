@@ -1,7 +1,7 @@
 # Epic 02: CLI Tool and Installation Integration
 
 > Derived from: [01-mcp-server.md](../concept/01-mcp-server.md)
-> Status: **in progress**
+> Status: **closed**
 
 ## Description
 
@@ -35,12 +35,12 @@ Create the `specumentation-mcp` CLI tool for project registration and extend `in
 - **Files:** `install.sh`
 
 ### [E-02.03] Extend SKILL.md init phase for MCP project registration
-- **Status:** open
+- **Status:** ✓ RESOLVED — Added step 7 to init phase for non-blocking MCP registration, and MCP status line to summary output.
 - **Concept ref:** [01-mcp-server.md, Integration in den Skill](../concept/01-mcp-server.md#repository-structure-changes)
 - **Description:** Update `SKILL.md` Phase 1 (Init) to call `specumentation-mcp init` after creating the `docs/` structure, so that each initialized project is automatically registered with the MCP server.
 - **Acceptance Criteria:**
-  - [ ] `SKILL.md` init phase includes a step to run `specumentation-mcp init`
-  - [ ] The step only runs if the `specumentation-mcp` command is available in PATH
-  - [ ] The step's success or failure does not block the rest of init
-  - [ ] The summary output notes whether MCP registration succeeded
+  - [x] `SKILL.md` init phase includes a step to run `specumentation-mcp init`
+  - [x] The step only runs if the `specumentation-mcp` command is available in PATH
+  - [x] The step's success or failure does not block the rest of init
+  - [x] The summary output notes whether MCP registration succeeded
 - **Files:** `SKILL.md`
