@@ -75,3 +75,22 @@ docs/
 ├── assets/           # Logos, color definitions, images for documentation
 └── in/               # Inbox for external docs (e.g. from ChatGPT), deleted after processing
 ```
+
+## Specumentation
+
+This project uses [specumentation](https://github.com/McGo/claude-code-specumentation) for spec-first development.
+
+### Assumptions
+
+- **Document language**: English (en) — derived from README language
+- **Concept language**: English (en)
+- **Project name**: specumentation
+- **Project version source**: manual — no package manager config found
+
+### Directory Structure
+
+- `docs/concept/` — Concept documents (specifications)
+- `docs/epics/` — Epics with tickets
+- `docs/documents/` — Generated documents (PDF, HTML)
+- `docs/assets/` — Branding resources (logos, colors)
+- `docs/in/` — Inbox for external documents
