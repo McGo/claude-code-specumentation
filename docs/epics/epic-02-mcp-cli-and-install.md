@@ -1,7 +1,7 @@
 # Epic 02: CLI Tool and Installation Integration
 
 > Derived from: [01-mcp-server.md](../concept/01-mcp-server.md)
-> Status: **open**
+> Status: **in progress**
 
 ## Description
 
@@ -10,16 +10,16 @@ Create the `specumentation-mcp` CLI tool for project registration and extend `in
 ## Tickets
 
 ### [E-02.01] Create `specumentation-mcp` CLI tool
-- **Status:** open
+- **Status:** ✓ RESOLVED — Bash script with init (duplicate-safe registration) and list subcommands, usage help on no args.
 - **Concept ref:** [01-mcp-server.md, Repository Structure Changes](../concept/01-mcp-server.md#repository-structure-changes)
 - **Description:** Create `mcp-server/specumentation-mcp` as a Bash script that supports `init` (register current directory in `projects.json`) and `list` (show registered projects) subcommands.
 - **Acceptance Criteria:**
-  - [ ] `mcp-server/specumentation-mcp` is an executable Bash script
-  - [ ] `specumentation-mcp init` adds the current directory to `~/.claude/specumentation-mcp/projects.json`
-  - [ ] `specumentation-mcp init` does not add duplicates if the project is already registered
-  - [ ] `specumentation-mcp init` creates `projects.json` if it does not exist
-  - [ ] `specumentation-mcp list` prints all registered projects
-  - [ ] Running without arguments prints usage help
+  - [x] `mcp-server/specumentation-mcp` is an executable Bash script
+  - [x] `specumentation-mcp init` adds the current directory to `~/.claude/specumentation-mcp/projects.json`
+  - [x] `specumentation-mcp init` does not add duplicates if the project is already registered
+  - [x] `specumentation-mcp init` creates `projects.json` if it does not exist
+  - [x] `specumentation-mcp list` prints all registered projects
+  - [x] Running without arguments prints usage help
 - **Files:** `mcp-server/specumentation-mcp`
 
 ### [E-02.02] Extend `install.sh` for MCP server deployment
