@@ -1,0 +1,97 @@
+#!/usr/bin/env bash
+# specumentation-mcp — CLI for managing the specumentation MCP server project registry.
+
+set -euo pipefail
+
+REGISTRY_DIR="$HOME/.claude/specumentation-mcp"
+REGISTRY_FILE="$REGISTRY_DIR/projects.json"
+
+usage() {
+    echo "Usage: specumentation-mcp <command>"
+    echo ""
+    echo "Commands:"
+    echo "  init    Register the current directory as a specumentation project"
+    echo "  list    List all registered projects"
+    echo ""
+    echo "The project registry is stored at: $REGISTRY_FILE"
+}
+
+ensure_registry() {
+    mkdir -p "$REGISTRY_DIR"
+    if [ ! -f "$REGISTRY_FILE" ]; then
+        echo "[]" > "$REGISTRY_FILE"
+    fi
+}
+
+cmd_init() {
+    ensure_registry
+
+    local project_path
+    project_path="$(pwd)"
+
+    if [ ! -d "$project_path/docs/concept" ]; then
+        echo "Error: No docs/concept/ directory found in $project_path"
+        echo "Run '/specumentation init' first to set up the documentation structure."
+        exit 1
+    fi
+
+    # Derive project name from directory name
+    local project_name
+    project_name="$(basename "$project_path")"
+
+    # Check for duplicates
+    if python3 -c "
+import json, sys
+with open('$REGISTRY_FILE') as f:
+    projects = json.load(f)
+for p in projects:
+    if p['path'] == '$project_path':
+        print('already registered')
+        sys.exit(0)
+sys.exit(1)
+" 2>/dev/null; then
+        echo "Project '$project_name' is already registered at $project_path"
+        return 0
+    fi
+
+    # Add to registry
+    python3 -c "
+import json
+with open('$REGISTRY_FILE') as f:
+    projects = json.load(f)
+projects.append({'path': '$project_path', 'name': '$project_name'})
+with open('$REGISTRY_FILE', 'w') as f:
+    json.dump(projects, f, indent=2)
+"
+
+    echo "Registered project '$project_name' at $project_path"
+}
+
+cmd_list() {
+    ensure_registry
+
+    python3 -c "
+import json
+with open('$REGISTRY_FILE') as f:
+    projects = json.load(f)
+if not projects:
+    print('No projects registered.')
+else:
+    print(f'Registered projects ({len(projects)}):')
+    for p in projects:
+        print(f\"  {p['name']}: {p['path']}\")
+"
+}
+
+case "${1:-}" in
+    init)
+        cmd_init
+        ;;
+    list)
+        cmd_list
+        ;;
+    *)
+        usage
+        exit 1
+        ;;
+esac
