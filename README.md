@@ -13,6 +13,7 @@ A Claude Code skill that enforces a **spec-first development** workflow: write c
 - **Update** — Detects divergence between code and concepts, flags it, and synchronizes documentation
 - **Work** — Picks the next open ticket from the epics and implements it
 - **Whats-Next** — Analyzes the project state and suggests exactly one next step
+- **Ticket-Overview** — Displays epic/ticket status as a table and generates a PDF overview
 - **Publish** — Generates documents as PDF using predefined document types
 
 ## Installation
@@ -23,7 +24,11 @@ cd specumentation
 bash install.sh
 ```
 
-The installer creates a symlink from `~/.claude/skills/specumentation` to the cloned repository. No packages installed, no environment modified, no privileges required.
+The installer:
+1. Creates a symlink from `~/.claude/skills/specumentation` to the cloned repository
+2. Deploys the MCP server to `~/.claude/specumentation-mcp/`
+3. Symlinks the `specumentation-mcp` CLI to `/usr/local/bin` (or `~/.local/bin` as fallback)
+4. Prints the configuration snippet for Claude Desktop (see [MCP Server](#mcp-server) below)
 
 ## Usage
 
@@ -35,8 +40,9 @@ The installer creates a symlink from `~/.claude/skills/specumentation` to the cl
 /specumentation inbox                        # Process docs from docs/in/
 /specumentation update                       # Sync docs with code changes
 /specumentation work                         # Pick next open ticket and implement it
-/specumentation whats-next                   # What should I do next?
 /specumentation work E-02.03                 # Implement a specific ticket
+/specumentation whats-next                   # What should I do next?
+/specumentation ticket-overview              # Show epic/ticket status overview + PDF
 /specumentation publish                      # Generate all document types as PDF
 /specumentation publish user-manual          # Generate a specific document type
 /specumentation publish architecture lang=de # Combined parameters
@@ -52,6 +58,7 @@ The skill ships with predefined document types that generate different outputs f
 | `elevator-pitch` | One-page product summary for quick communication |
 | `executive-summary` | Management overview with project status, risks, and roadmap |
 | `architecture` | Technical architecture document for developers |
+| `ticket-overview` | Tabular status overview of all epics and tickets |
 
 Custom document types can be added by placing a new `.md` file in the skill's `documents/` directory.
 
@@ -89,11 +96,60 @@ docs/
 5. **External input** — Drop documents from other sources into `docs/in/`, then run `/specumentation inbox`
 6. **Publish** — Use `/specumentation publish [type]` to generate documents at any time
 
+## MCP Server
+
+specumentation includes an **MCP server** that gives [Claude Desktop](https://claude.ai) direct access to your project's concept documents — no manual upload or copy-paste required.
+
+### How It Works
+
+The MCP server runs locally and understands the specumentation directory structure. When Claude Desktop connects, it can automatically read and update your concept documents through structured tools:
+
+| Tool | Description |
+|------|-------------|
+| `get_overview()` | Load the project overview as initial context |
+| `list_concepts()` | List all concepts with status from the index |
+| `get_concept(topic)` | Read a specific concept by number or slug |
+| `update_concept(topic, content)` | Write changes back, preserving the Change Log |
+| `list_projects()` | Show all registered projects |
+| `set_project(path)` | Switch to a different project |
+
+### Setup
+
+After running `install.sh`, add the MCP server to your Claude Desktop configuration:
+
+**`~/Library/Application Support/Claude/claude_desktop_config.json`** (macOS):
+
+```json
+{
+  "mcpServers": {
+    "specumentation": {
+      "command": "python3",
+      "args": ["~/.claude/specumentation-mcp/server.py"]
+    }
+  }
+}
+```
+
+Then register each project:
+
+```bash
+cd /path/to/your/project
+specumentation-mcp init          # Register this project
+specumentation-mcp list          # Show all registered projects
+```
+
+Projects are also auto-registered when you run `/specumentation init` (if the CLI is installed).
+
+### Project Detection
+
+The server detects the active project by walking up from the working directory to find a `docs/concept/` folder. As a fallback, it checks the project registry. You can also switch manually using the `set_project` tool.
+
 ## Requirements
 
 - [Claude Code](https://claude.ai/code) CLI
 - Google Chrome (for PDF generation, auto-detected on macOS/Linux/WSL)
 - git, bash
+- Python 3 + `mcp` package (for MCP server only — `pip install mcp`)
 
 ## License
 

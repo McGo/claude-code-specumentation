@@ -1,4 +1,4 @@
-bit# CLAUDE.md
+# CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
@@ -8,11 +8,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Skill Architecture
 
-This is a **declarative skill** — no runtime code, just structured prompts and templates:
+The skill has two parts:
 
+### Declarative Skill (no runtime code)
 - `SKILL.md` — Core skill definition with frontmatter metadata and phased execution instructions. This is what Claude Code reads and executes.
 - `documents/` — Document type definitions shipped with the skill. Each `.md` file defines a document type (frontmatter + generation prompt) that the publish phase uses.
-- `install.sh` — Symlink-based installer to `~/.claude/skills/specumentation`.
+- `install.sh` — Installer that symlinks the skill and deploys the MCP server.
+
+### MCP Server (Python)
+- `mcp-server/server.py` — FastMCP-based server (~250 lines) that exposes concept documents to Claude Desktop via 6 tools: `list_projects`, `set_project`, `get_overview`, `list_concepts`, `get_concept`, `update_concept`.
+- `mcp-server/specumentation-mcp` — Bash CLI (~100 lines) for project registration (`init`) and listing (`list`).
+
+Deployed to `~/.claude/specumentation-mcp/` by `install.sh`.
 
 ## Document Type System
 
@@ -31,21 +38,23 @@ description: "..."         # What this type produces
 Built-in types: `user-manual`, `elevator-pitch`, `executive-summary`, `architecture`, `ticket-overview`.
 New types can be added by creating a new `.md` file in `documents/`.
 
-## Key Conventions (from sibling skill `security-audit`)
+## Key Conventions
 
 - Skills are installed as symlinks in `~/.claude/skills/`
 - `SKILL.md` frontmatter uses `name`, `description`, `disable-model-invocation`
 - PDF generation uses headless Chrome (`--headless --disable-gpu --print-to-pdf`)
 - Documents are never deleted — they form an audit trail
 - Language support via `lang=XX` parameter parsing
+- MCP server uses FastMCP with stdio transport
+- Project registry at `~/.claude/specumentation-mcp/projects.json`
 
 ## Commands
 
 ```bash
-# Install skill globally
+# Install skill globally (also deploys MCP server)
 bash install.sh
 
-# Invoke in any project
+# Invoke in any project (Claude Code)
 /specumentation                          # Full cycle: all phases
 /specumentation init                     # Set up docs/ directory structure
 /specumentation concept [topic]          # Create/update a concept document
@@ -59,6 +68,10 @@ bash install.sh
 /specumentation publish                  # Generate all document types as PDF
 /specumentation publish user-manual      # Generate a specific document type
 /specumentation publish elevator-pitch lang=de  # Combined parameters
+
+# MCP project management
+specumentation-mcp init                  # Register current project
+specumentation-mcp list                  # List registered projects
 ```
 
 ## Opinionated Target Project Structure
