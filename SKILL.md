@@ -117,7 +117,9 @@ This project uses [specumentation](https://github.com/McGo/claude-code-specument
 
 If the `lang=` parameter was provided, use it. Otherwise, detect the language from existing documentation, README, or code comments. If unclear, default to English and note it as an assumption.
 
-**Output:** Confirm what was created and what already existed.
+7. **MCP Server Registration** (optional): If `specumentation-mcp` is available in PATH, run `specumentation-mcp init` to register the project with the MCP server. This step is non-blocking — if the command is not found or fails, continue with init and note the skip in the summary. If it succeeds, note the registration in the summary.
+
+**Output:** Confirm what was created and what already existed. Note whether MCP registration succeeded, was skipped (command not found), or failed.
 
 ---
 
@@ -511,6 +513,7 @@ Concepts updated:  [count]
 Epics created:     [count]
 Epics updated:     [count]
 Inbox processed:   [count]
+MCP registration:  [registered | skipped (not installed) | failed]
 Documents generated:
   - [document-type]: [path]
   - ...
