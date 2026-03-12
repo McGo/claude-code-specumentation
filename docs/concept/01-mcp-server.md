@@ -1,6 +1,6 @@
 # MCP Server
 
-> Concept document — Status: **draft**
+> Concept document — Status: **implemented**
 
 ## Purpose
 
@@ -21,13 +21,13 @@ When using Claude Desktop (e.g. with Opus), users currently have to manually upl
 
 ### Project Detection
 
-The server detects the active project via the working directory of Claude Desktop (analogous to Claude Code). A manual `set_project(path)` tool allows switching if needed.
+The server detects the active project by walking up from the working directory to find a `docs/concept/` directory. As a fallback, it checks if the working directory is inside any registered project. A manual `set_project(path)` tool allows switching if needed.
 
 ## Technical Description
 
 ### Architecture
 
-A single global MCP server instance running locally, serving all registered specumentation projects.
+A single global MCP server instance running locally via FastMCP (stdio transport), serving all registered specumentation projects.
 
 ```
 ~/.claude/specumentation-mcp/
@@ -46,7 +46,7 @@ Project B/docs/concept/     ← Same server, different directory
 {
   "mcpServers": {
     "specumentation": {
-      "command": "python",
+      "command": "python3",
       "args": ["~/.claude/specumentation-mcp/server.py"]
     }
   }
@@ -57,12 +57,12 @@ Project B/docs/concept/     ← Same server, different directory
 
 | Tool | Description |
 |------|-------------|
-| `list_concepts()` | Returns the concept index from `docs/concept/00-overview.md` |
-| `get_concept(topic)` | Reads the matching concept file, e.g. `01-authentication.md` |
-| `update_concept(topic, content)` | Writes changes back to the concept file |
+| `list_projects()` | Shows all registered projects, marks active one |
+| `set_project(path)` | Validates target has `docs/concept/`, switches context, returns overview |
 | `get_overview()` | Loads `00-overview.md` as initial context |
-| `set_project(path)` | Manually switch the active project |
-| `list_projects()` | Shows all registered projects |
+| `list_concepts()` | Parses the Concept Index table and returns structured data |
+| `get_concept(topic)` | Reads matching concept file by number prefix or slug |
+| `update_concept(topic, content)` | Writes content to concept file, preserves Change Log via regex |
 
 No generic filesystem access — only specumentation-aware operations.
 
@@ -78,10 +78,11 @@ No generic filesystem access — only specumentation-aware operations.
 
 ### Behavior
 
-- On server start: Detect active project from working directory, auto-load `00-overview.md`.
-- On `set_project(path)`: Validate path contains `docs/concept/`, switch context.
-- On `update_concept()`: Write changes, preserve Change Log format.
-- If no active project detected: Return helpful error suggesting `specumentation-mcp init`.
+- On server start: Walk up from cwd to find `docs/concept/`; fallback to registry lookup.
+- On `set_project(path)`: Validate path contains `docs/concept/`, switch context, return overview.
+- On `update_concept()`: Write full content; if new content lacks Change Log but original has one, append the original's Change Log.
+- If no active project detected: Raise ValueError with 3 suggested remedies.
+- `list_projects()` marks the active project with "(active)".
 
 ### Comparison to Generic Filesystem MCP
 
@@ -98,29 +99,21 @@ No generic filesystem access — only specumentation-aware operations.
 - **External**: Python 3, `mcp` package (Anthropic MCP Python SDK — `pip install mcp`)
 - **Internal**: Specumentation directory structure (`docs/concept/`)
 - **Integration points**:
-  - `install.sh` — Extended to copy `server.py` and create CLI symlink
-  - `/specumentation init` — Extended to call `specumentation-mcp init` for project registration
+  - `install.sh` — Copies `server.py`, symlinks CLI, prints config snippet
+  - `SKILL.md` init phase — Calls `specumentation-mcp init` (non-blocking)
 
-## Repository Structure Changes
+## Repository Structure
 
 ```
 specumentation/
 ├── SKILL.md
 ├── CLAUDE.md
-├── install.sh              ← Extended
+├── install.sh              ← Deploys skill + MCP server
 ├── documents/
-└── mcp-server/             ← New
-    ├── server.py           ← MCP server (~100 lines Python)
-    ├── specumentation-mcp  ← CLI for init/list
-    └── README.md           ← Setup instructions
+└── mcp-server/
+    ├── server.py           ← MCP server (~250 lines Python, FastMCP)
+    └── specumentation-mcp  ← CLI for init/list (~100 lines Bash)
 ```
-
-## Implementation Estimate
-
-- `server.py`: ~100 lines Python (MCP SDK + file access)
-- `specumentation-mcp` CLI: ~30 lines Bash
-- `install.sh` extension: ~10 lines
-- `/specumentation init` extension: 1 additional call
 
 ## Open Questions
 
@@ -134,3 +127,4 @@ specumentation/
 | Date | Change | Author |
 |------|--------|--------|
 | 2026-03-12 | Initial concept — Source: docs/in/specumentation-mcp-concept.md | specumentation |
+| 2026-03-12 | Update: status → implemented, sync with actual code (python3, FastMCP, file sizes, CLI fallback, project detection behavior) | specumentation |
