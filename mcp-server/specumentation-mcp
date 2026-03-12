@@ -11,6 +11,7 @@ usage() {
     echo ""
     echo "Commands:"
     echo "  init    Register the current directory as a specumentation project"
+    echo "  remove  Remove the current directory (or a given path) from the registry"
     echo "  list    List all registered projects"
     echo ""
     echo "The project registry is stored at: $REGISTRY_FILE"
@@ -67,6 +68,39 @@ with open('$REGISTRY_FILE', 'w') as f:
     echo "Registered project '$project_name' at $project_path"
 }
 
+cmd_remove() {
+    ensure_registry
+
+    local project_path
+    project_path="${1:-$(pwd)}"
+
+    # Resolve to absolute path
+    project_path="$(cd "$project_path" 2>/dev/null && pwd || echo "$project_path")"
+
+    local result
+    result=$(python3 -c "
+import json, sys
+with open('$REGISTRY_FILE') as f:
+    projects = json.load(f)
+before = len(projects)
+projects = [p for p in projects if p['path'] != '$project_path']
+if len(projects) == before:
+    print('not found')
+    sys.exit(1)
+with open('$REGISTRY_FILE', 'w') as f:
+    json.dump(projects, f, indent=2)
+print('removed')
+" 2>/dev/null) || true
+
+    if [ "$result" = "removed" ]; then
+        echo "Removed project at $project_path"
+    else
+        echo "Project not found in registry: $project_path"
+        echo "Use 'specumentation-mcp list' to see registered projects."
+        return 1
+    fi
+}
+
 cmd_list() {
     ensure_registry
 
@@ -86,6 +120,9 @@ else:
 case "${1:-}" in
     init)
         cmd_init
+        ;;
+    remove)
+        cmd_remove "${2:-}"
         ;;
     list)
         cmd_list
