@@ -13,7 +13,7 @@ This is a **declarative skill** — no runtime code, just structured prompts and
 
 | # | Concept | Status | Last Updated |
 |---|---------|--------|--------------|
-| — | — | — | — |
+| 01 | [MCP Server](01-mcp-server.md) | draft | 2026-03-12 |
 
 ## Architecture Decisions
 
@@ -32,3 +32,5 @@ This is a **declarative skill** — no runtime code, just structured prompts and
 | Ticket | A concrete, implementable task within an epic, with acceptance criteria |
 | Document type | A template definition that controls how concepts/epics are transformed into a published document |
 | Inbox | The `docs/in/` directory where external documents are placed for processing |
+| MCP | Model Context Protocol — Anthropic's protocol for connecting AI models to external data sources |
+| MCP Server | A local server that exposes specumentation concepts to Claude Desktop via MCP |
