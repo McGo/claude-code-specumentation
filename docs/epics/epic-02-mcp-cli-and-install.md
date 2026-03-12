@@ -23,15 +23,15 @@ Create the `specumentation-mcp` CLI tool for project registration and extend `in
 - **Files:** `mcp-server/specumentation-mcp`
 
 ### [E-02.02] Extend `install.sh` for MCP server deployment
-- **Status:** open
+- **Status:** ✓ RESOLVED — install.sh extended with MCP server copy, CLI symlink (with ~/.local/bin fallback), and claude_desktop_config.json snippet.
 - **Concept ref:** [01-mcp-server.md, Integration in den Skill](../concept/01-mcp-server.md#repository-structure-changes)
 - **Description:** Extend `install.sh` to copy `server.py` to `~/.claude/specumentation-mcp/`, symlink the CLI tool to `/usr/local/bin/specumentation-mcp`, and print the `claude_desktop_config.json` snippet the user needs to add manually.
 - **Acceptance Criteria:**
-  - [ ] `install.sh` creates `~/.claude/specumentation-mcp/` directory
-  - [ ] `install.sh` copies `mcp-server/server.py` to `~/.claude/specumentation-mcp/server.py`
-  - [ ] `install.sh` creates a symlink for `specumentation-mcp` CLI in a PATH-accessible location
-  - [ ] `install.sh` prints the JSON snippet for `claude_desktop_config.json` with clear instructions
-  - [ ] Existing skill symlink creation is preserved (no regression)
+  - [x] `install.sh` creates `~/.claude/specumentation-mcp/` directory
+  - [x] `install.sh` copies `mcp-server/server.py` to `~/.claude/specumentation-mcp/server.py`
+  - [x] `install.sh` creates a symlink for `specumentation-mcp` CLI in a PATH-accessible location
+  - [x] `install.sh` prints the JSON snippet for `claude_desktop_config.json` with clear instructions
+  - [x] Existing skill symlink creation is preserved (no regression)
 - **Files:** `install.sh`
 
 ### [E-02.03] Extend SKILL.md init phase for MCP project registration
